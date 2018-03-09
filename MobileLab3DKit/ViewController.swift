@@ -42,6 +42,8 @@ class ViewController: UIViewController {
         ambientLightNode.light!.color = UIColor.darkGray
         scene.rootNode.addChildNode(ambientLightNode)
         
+        
+        
         /*
         // retrieve the ship node
         let ship = scene.rootNode.childNode(withName: "ship", recursively: true)!
@@ -64,6 +66,8 @@ class ViewController: UIViewController {
         
         // configure the view
         scnView.backgroundColor = UIColor.black
+        
+        scnView.debugOptions = .showPhysicsShapes
         
         // add a tap gesture recognizer
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
