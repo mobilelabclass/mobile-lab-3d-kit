@@ -7,17 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6A36E6D8205AD33000467A28 /* MenuButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6A36E6D7205AD33000467A28 /* MenuButton.swift */; };
+		6A36E6DC205AD74600467A28 /* MyScene.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6A36E6DB205AD74600467A28 /* MyScene.sks */; };
 		6ABF0E0D2051BDF3002170CE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF0E0C2051BDF3002170CE /* AppDelegate.swift */; };
 		6ABF0E112051BDF3002170CE /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF0E102051BDF3002170CE /* ViewController.swift */; };
 		6ABF0E282051BE59002170CE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ABF0E212051BE59002170CE /* Assets.xcassets */; };
 		6ABF0E292051BE59002170CE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6ABF0E222051BE59002170CE /* LaunchScreen.storyboard */; };
 		6ABF0E2A2051BE59002170CE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6ABF0E242051BE59002170CE /* Main.storyboard */; };
 		6ABF0E2B2051BE59002170CE /* art.scnassets in Resources */ = {isa = PBXBuildFile; fileRef = 6ABF0E262051BE59002170CE /* art.scnassets */; };
-		6ABF0E2F2051C0C7002170CE /* MenuOverlay.sks in Resources */ = {isa = PBXBuildFile; fileRef = 6ABF0E2D2051C0C7002170CE /* MenuOverlay.sks */; };
 		6ABF0E302051C0C7002170CE /* MenuOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6ABF0E2E2051C0C7002170CE /* MenuOverlay.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6A36E6D7205AD33000467A28 /* MenuButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuButton.swift; sourceTree = "<group>"; };
+		6A36E6DB205AD74600467A28 /* MyScene.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MyScene.sks; sourceTree = "<group>"; };
 		6ABF0E092051BDF3002170CE /* MobileLab3DKit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MobileLab3DKit.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6ABF0E0C2051BDF3002170CE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		6ABF0E102051BDF3002170CE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -26,7 +29,6 @@
 		6ABF0E252051BE59002170CE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6ABF0E262051BE59002170CE /* art.scnassets */ = {isa = PBXFileReference; lastKnownFileType = wrapper.scnassets; path = art.scnassets; sourceTree = "<group>"; };
 		6ABF0E272051BE59002170CE /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		6ABF0E2D2051C0C7002170CE /* MenuOverlay.sks */ = {isa = PBXFileReference; lastKnownFileType = file.sks; path = MenuOverlay.sks; sourceTree = "<group>"; };
 		6ABF0E2E2051C0C7002170CE /* MenuOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuOverlay.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -41,6 +43,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6A36E6DD205AE16F00467A28 /* Menu */ = {
+			isa = PBXGroup;
+			children = (
+				6ABF0E2E2051C0C7002170CE /* MenuOverlay.swift */,
+				6A36E6D7205AD33000467A28 /* MenuButton.swift */,
+			);
+			path = Menu;
+			sourceTree = "<group>";
+		};
 		6ABF0E002051BDF3002170CE = {
 			isa = PBXGroup;
 			children = (
@@ -62,9 +73,9 @@
 			children = (
 				6ABF0E0C2051BDF3002170CE /* AppDelegate.swift */,
 				6ABF0E102051BDF3002170CE /* ViewController.swift */,
-				6ABF0E2D2051C0C7002170CE /* MenuOverlay.sks */,
-				6ABF0E2E2051C0C7002170CE /* MenuOverlay.swift */,
+				6A36E6DD205AE16F00467A28 /* Menu */,
 				6ABF0E202051BE59002170CE /* Resources */,
+				6A36E6DB205AD74600467A28 /* MyScene.sks */,
 			);
 			path = MobileLab3DKit;
 			sourceTree = "<group>";
@@ -141,8 +152,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				6ABF0E2A2051BE59002170CE /* Main.storyboard in Resources */,
-				6ABF0E2F2051C0C7002170CE /* MenuOverlay.sks in Resources */,
 				6ABF0E2B2051BE59002170CE /* art.scnassets in Resources */,
+				6A36E6DC205AD74600467A28 /* MyScene.sks in Resources */,
 				6ABF0E282051BE59002170CE /* Assets.xcassets in Resources */,
 				6ABF0E292051BE59002170CE /* LaunchScreen.storyboard in Resources */,
 			);
@@ -155,6 +166,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6A36E6D8205AD33000467A28 /* MenuButton.swift in Sources */,
 				6ABF0E112051BDF3002170CE /* ViewController.swift in Sources */,
 				6ABF0E302051C0C7002170CE /* MenuOverlay.swift in Sources */,
 				6ABF0E0D2051BDF3002170CE /* AppDelegate.swift in Sources */,

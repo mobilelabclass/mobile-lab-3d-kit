@@ -14,6 +14,13 @@ import SpriteKit
 
 class ViewController: UIViewController {
 
+    var zombieAnimation: SCNAnimationPlayer!
+
+    var dribbleAnimation: SCNAnimationPlayer!
+
+    var animations = [String: CAAnimation]()
+    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -62,7 +69,7 @@ class ViewController: UIViewController {
         scnView.allowsCameraControl = true
         
         // show statistics such as fps and timing information
-        scnView.showsStatistics = true
+        // scnView.showsStatistics = true
         
         // configure the view
         scnView.backgroundColor = UIColor.black
@@ -70,55 +77,64 @@ class ViewController: UIViewController {
         scnView.debugOptions = .showPhysicsShapes
         
         // add a tap gesture recognizer
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-        scnView.addGestureRecognizer(tapGesture)
+//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+//        scnView.addGestureRecognizer(tapGesture)
 
-    
-        if let scene = SKScene(fileNamed: "MenuOverlay") as? MenuOverlay {
-            scene.scaleMode = .resizeFill
-            scnView.overlaySKScene = scene
+//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
+//        zombieAnimation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/Zombie.dae")
+//        characterNode!.addAnimationPlayer(zombieAnimation, forKey: "animation")
+//        zombieAnimation.play()
+
+//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
+//        zombieAnimation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/Zombie.dae")
+//        characterNode!.addAnimationPlayer(zombieAnimation, forKey: "animation")
+//        zombieAnimation.blendFactor = 0.0
+//        zombieAnimation.stop(withBlendOutDuration: 0.2)
+//        zombieAnimation.play()
+
+//        loadAnimation(withKey: "zombie", sceneName: "art.scnassets/Zombie", animationIdentifier: "Zombie-1")
+//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
+//        characterNode!.addAnimation(animations["zombie"]!, forKey: "zombie")
+//
+
+        let menuOverlay = MenuOverlay(size: self.view.bounds.size)
+        scnView.overlaySKScene = menuOverlay
+        
+        menuOverlay.handleLightingModelBtn = { (lightingModel) in
+            let ship = scene.rootNode.childNode(withName: "shipMesh", recursively: true)!
+            ship.geometry!.firstMaterial!.lightingModel = lightingModel
         }
+
+        menuOverlay.handleCameramControlBtn = { (isOn) in
+            scnView.allowsCameraControl = isOn
+        }
+
     }
+    
     
     @objc
     func handleTap(_ gestureRecognize: UIGestureRecognizer) {
         // retrieve the SCNView
         let scnView = self.view as! SCNView
 
-        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
-        let animation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/JumpingFixed.dae")
-        characterNode!.addAnimationPlayer(animation, forKey: "animation")
-        animation.play()
+
+//        loadAnimation(withKey: "dribble", sceneName: "art.scnassets/Dribble", animationIdentifier: "Dribble-1")
+//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
+//        characterNode!.addAnimation(animations["dribble"]!, forKey: "dribble")
         
-        // check what nodes are tapped
-        let p = gestureRecognize.location(in: scnView)
-        let hitResults = scnView.hitTest(p, options: [:])
-        // check that we clicked on at least one object
-        if hitResults.count > 0 {
-            // retrieved the first clicked object
-            let result = hitResults[0]
-            
-            // get its material
-            let material = result.node.geometry!.firstMaterial!
-            
-            // highlight it
-            SCNTransaction.begin()
-            SCNTransaction.animationDuration = 0.5
-            
-            // on completion - unhighlight
-            SCNTransaction.completionBlock = {
-                SCNTransaction.begin()
-                SCNTransaction.animationDuration = 0.5
-                
-                material.emission.contents = UIColor.black
-                
-                SCNTransaction.commit()
-            }
-            
-            material.emission.contents = UIColor.red
-            
-            SCNTransaction.commit()
-        }
+        
+//        zombieAnimation.blendFactor = 0.5
+//        zombieAnimation.stop(withBlendOutDuration: 1.0)
+        
+        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
+        self.dribbleAnimation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/Dribble.dae")
+        
+        self.dribbleAnimation.animation.blendInDuration = 0.25
+        self.dribbleAnimation.animation.blendOutDuration = 0.5
+
+        characterNode!.addAnimationPlayer(self.dribbleAnimation, forKey: "dribble")
+        self.dribbleAnimation.animation.repeatCount = 2
+        self.dribbleAnimation.play()
     }
     
     override var shouldAutorotate: Bool {
@@ -136,28 +152,6 @@ class ViewController: UIViewController {
             return .all
         }
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Release any cached data, images, etc that aren't in use.
-    }
-
-    
-//    func loadAnimation(withKey: String, sceneName:String, animationIdentifier:String) {
-//        let sceneURL = Bundle.main.url(forResource: sceneName, withExtension: "dae")
-//        let sceneSource = SCNSceneSource(url: sceneURL!, options: nil)
-//
-//        if let animationObject = sceneSource?.entryWithIdentifier(animationIdentifier, withClass: CAAnimation.self) {
-//            // The animation will only play once
-//            animationObject.repeatCount = 1
-//            // To create smooth transitions between animations
-//            animationObject.fadeInDuration = CGFloat(1)
-//            animationObject.fadeOutDuration = CGFloat(0.5)
-//
-//            // Store the animation for later use
-//            animations[withKey] = animationObject
-//        }
-//    }
 }
 
 
