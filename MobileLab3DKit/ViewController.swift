@@ -9,66 +9,54 @@
 import UIKit
 import QuartzCore
 import SceneKit
-import SpriteKit
+
+//
+// Menu options.
+//
+let LightingModels: [(text: String, light: SCNMaterial.LightingModel)] = [
+    ("Constant",          .constant),
+    ("Lambert",           .lambert),
+    ("Blinn",             .blinn),
+    ("Phong",             .phong),
+    ("Physically Based",  .physicallyBased)]
+
+let LightingSchemes: [(text: String, id: Int)] = [
+    ("No Lights",    0),
+    ("Spot Light",   1)]
+
+let Animations: [(text: String, file: String)] = [
+    ("Idle",  ""),
+    ("Samba Dancing",  "SambaDancing.dae"),
+    ("Bellydancing",  "Bellydancing.dae"),
+    ("Jumping",  "Jumping.dae")]
+
+let CameraControlToggle: [(text: String, isOn: Bool)] = [
+    ("Cam Ctrl On", true),
+    ("Cam Ctrl Off", false)]
 
 
 class ViewController: UIViewController {
 
-    var zombieAnimation: SCNAnimationPlayer!
-
-    var dribbleAnimation: SCNAnimationPlayer!
-
-    var animations = [String: CAAnimation]()
+    @IBOutlet weak var sceneView: SCNView!
     
-
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // create a new scene
+        // Create a new scene.
         let scene = SCNScene(named: "art.scnassets/main_scene.scn")!
+
+        // Set the scene to the view.
+        sceneView.scene = scene
         
-//        // create and add a camera to the scene
-//        let cameraNode = SCNNode()
-//        cameraNode.camera = SCNCamera()
-//        scene.rootNode.addChildNode(cameraNode)
-//        
-//        // place the camera
-//        cameraNode.position = SCNVector3(x: 0, y: 0, z: 15)
+        // Allows the user to manipulate the camera with gestures.
+        sceneView.allowsCameraControl = true
         
-        /*
-        // create and add a light to the scene
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light!.type = .omni
-        lightNode.position = SCNVector3(x: 0, y: 10, z: 10)
-        scene.rootNode.addChildNode(lightNode)
-        
-        // create and add an ambient light to the scene
-        let ambientLightNode = SCNNode()
-        ambientLightNode.light = SCNLight()
-        ambientLightNode.light!.type = .ambient
-        ambientLightNode.light!.color = UIColor.darkGray
-        scene.rootNode.addChildNode(ambientLightNode)
-        */
- 
-        // retrieve the SCNView
-        let scnView = self.view as! SCNView
-        
-        // set the scene to the view
-        scnView.scene = scene
-        
-        // allows the user to manipulate the camera
-        scnView.allowsCameraControl = true
-        
-        // show statistics such as fps and timing information
-        // scnView.showsStatistics = true
-        
-        // configure the view
-        scnView.backgroundColor = UIColor.black
-        
-        scnView.debugOptions = .showPhysicsShapes
-        
-        scnView.autoenablesDefaultLighting = true
+        // Show statistics such as fps and timing information.
+        sceneView.showsStatistics = true
+
+        // Shows physics geometry.
+        // sceneView.debugOptions = .showPhysicsShapes
+
         
         
         // add a tap gesture recognizer
@@ -92,6 +80,7 @@ class ViewController: UIViewController {
 //        characterNode!.addAnimation(animations["zombie"]!, forKey: "zombie")
 //
 
+        /*
         let menuOverlay = MenuOverlay(size: self.view.bounds.size)
         scnView.overlaySKScene = menuOverlay
         
@@ -103,6 +92,17 @@ class ViewController: UIViewController {
         menuOverlay.handleCameramControlBtn = { (isOn) in
             scnView.allowsCameraControl = isOn
         }
+        */
+ 
+        let characterNode = sceneView.scene?.rootNode.childNode(withName: "hero_ref", recursively: true)!
+        let animation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/spin.dae")
+
+        animation.animation.blendInDuration = 0.25
+        animation.animation.blendOutDuration = 0.5
+
+        characterNode!.addAnimationPlayer(animation, forKey: "spin")
+        animation.play()
+
 
     }
     
@@ -110,7 +110,6 @@ class ViewController: UIViewController {
     @objc
     func handleTap(_ gestureRecognize: UIGestureRecognizer) {
         // retrieve the SCNView
-        let scnView = self.view as! SCNView
 
 
 //        loadAnimation(withKey: "dribble", sceneName: "art.scnassets/Dribble", animationIdentifier: "Dribble-1")
@@ -121,15 +120,15 @@ class ViewController: UIViewController {
 //        zombieAnimation.blendFactor = 0.5
 //        zombieAnimation.stop(withBlendOutDuration: 1.0)
         
-        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
-        self.dribbleAnimation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/Dribble.dae")
-        
-        self.dribbleAnimation.animation.blendInDuration = 0.25
-        self.dribbleAnimation.animation.blendOutDuration = 0.5
-
-        characterNode!.addAnimationPlayer(self.dribbleAnimation, forKey: "dribble")
-        self.dribbleAnimation.animation.repeatCount = 2
-        self.dribbleAnimation.play()
+//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
+//        self.dribbleAnimation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/Dribble.dae")
+//        
+//        self.dribbleAnimation.animation.blendInDuration = 0.25
+//        self.dribbleAnimation.animation.blendOutDuration = 0.5
+//
+//        characterNode!.addAnimationPlayer(self.dribbleAnimation, forKey: "dribble")
+//        self.dribbleAnimation.animation.repeatCount = 2
+//        self.dribbleAnimation.play()
     }
     
     override var shouldAutorotate: Bool {
@@ -147,24 +146,16 @@ class ViewController: UIViewController {
             return .all
         }
     }
-}
 
 
-
-
-// For loading animations with in collada model.
-extension SCNAnimationPlayer {
-    class func loadAnimation(fromSceneNamed sceneName: String) -> SCNAnimationPlayer {
-        let scene = SCNScene( named: sceneName )!
-        // find top level animation
-        var animationPlayer: SCNAnimationPlayer! = nil
-        scene.rootNode.enumerateChildNodes { (child, stop) in
-            if !child.animationKeys.isEmpty {
-                animationPlayer = child.animationPlayer(forKey: child.animationKeys[0])
-                stop.pointee = true
-            }
-        }
-        return animationPlayer
+    @IBAction func handleButton(_ sender: UIButton) {
+        print("hello")
+    
     }
+    
+
+
 }
+
+
 
