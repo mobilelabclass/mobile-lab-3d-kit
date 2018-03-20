@@ -10,35 +10,32 @@ import UIKit
 import QuartzCore
 import SceneKit
 
-//
-// Menu options.
-//
-let LightingModels: [(text: String, light: SCNMaterial.LightingModel)] = [
-    ("Constant",          .constant),
-    ("Lambert",           .lambert),
-    ("Blinn",             .blinn),
-    ("Phong",             .phong),
-    ("Physically Based",  .physicallyBased)]
 
-let LightingSchemes: [(text: String, id: Int)] = [
-    ("No Lights",    0),
-    ("Spot Light",   1)]
-
-let Animations: [(text: String, file: String)] = [
-    ("Idle",  ""),
-    ("Samba Dancing",  "SambaDancing.dae"),
-    ("Bellydancing",  "Bellydancing.dae"),
-    ("Jumping",  "Jumping.dae")]
-
-let CameraControlToggle: [(text: String, isOn: Bool)] = [
-    ("Cam Ctrl On", true),
-    ("Cam Ctrl Off", false)]
+// Animation states.
+let Animations: [(name: String, file: String)] = [
+    ("Idle",  "idle.dae"),
+    ("Dancing",  "dancing.dae"),
+    ("Jumping", "jumping.dae")]
 
 
 class ViewController: UIViewController {
 
+    // Outlet to scene view container.
     @IBOutlet weak var sceneView: SCNView!
+
+    // Outlet to button for toggling different animations.
+    @IBOutlet weak var animationButton: UIButton!
+
+    // Reference to hero character node.
+    var heroNode: SCNNode!
+
+    // Reference to box node in scene node.
+    var redBoxNode: SCNNode!
     
+    // Structure for cycling through animation states.
+    var heroAnimations = CycleArray(Animations)
+
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -52,84 +49,58 @@ class ViewController: UIViewController {
         sceneView.allowsCameraControl = true
         
         // Show statistics such as fps and timing information.
-        sceneView.showsStatistics = true
+        // sceneView.showsStatistics = true
 
-        // Shows physics geometry.
-        // sceneView.debugOptions = .showPhysicsShapes
 
-        
-        
-        // add a tap gesture recognizer
-//        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
-//        scnView.addGestureRecognizer(tapGesture)
+        // Access hero node by name.
+        heroNode = sceneView.scene!.rootNode.childNode(withName: "hero_ref", recursively: true)!
 
-//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
-//        zombieAnimation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/Zombie.dae")
-//        characterNode!.addAnimationPlayer(zombieAnimation, forKey: "animation")
-//        zombieAnimation.play()
-
-//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
-//        zombieAnimation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/Zombie.dae")
-//        characterNode!.addAnimationPlayer(zombieAnimation, forKey: "animation")
-//        zombieAnimation.blendFactor = 0.0
-//        zombieAnimation.stop(withBlendOutDuration: 0.2)
-//        zombieAnimation.play()
-
-//        loadAnimation(withKey: "zombie", sceneName: "art.scnassets/Zombie", animationIdentifier: "Zombie-1")
-//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
-//        characterNode!.addAnimation(animations["zombie"]!, forKey: "zombie")
-//
-
-        /*
-        let menuOverlay = MenuOverlay(size: self.view.bounds.size)
-        scnView.overlaySKScene = menuOverlay
-        
-        menuOverlay.handleLightingModelBtn = { (lightingModel) in
-//            let ship = scene.rootNode.childNode(withName: "shipMesh", recursively: true)!
-//            ship.geometry!.firstMaterial!.lightingModel = lightingModel
+        // Load and add all animations to hero node.
+        // Can later be access by key name for playback.
+        for animation in Animations {
+            let animationPlayer = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/animations/\(animation.file)")
+            
+            // Adjust animation blend duration for smooth transitions.
+            animationPlayer.animation.blendInDuration = 0.25
+            animationPlayer.animation.blendOutDuration  = 0.5
+            animationPlayer.stop()
+            
+            heroNode.addAnimationPlayer(animationPlayer, forKey: animation.name)
         }
 
-        menuOverlay.handleCameramControlBtn = { (isOn) in
-            scnView.allowsCameraControl = isOn
-        }
-        */
- 
-        let characterNode = sceneView.scene?.rootNode.childNode(withName: "hero_ref", recursively: true)!
-        let animation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/spin.dae")
+        // Play initial animation.
+        heroNode.animationPlayer(forKey: heroAnimations.currentElement!.name)!.play()
 
-        animation.animation.blendInDuration = 0.25
-        animation.animation.blendOutDuration = 0.5
+        // Update button title with animation name.
+        updateButtonTitle()
 
-        characterNode!.addAnimationPlayer(animation, forKey: "spin")
-        animation.play()
-
-
+        
+        // Access cube node by name.
+        redBoxNode = sceneView.scene!.rootNode.childNode(withName: "red_box", recursively: true)!
+        
+        // Spin box.
+        redBoxNode.runAction(SCNAction.repeatForever(SCNAction.rotateBy(x: 0, y: 2, z: 0, duration: 1)))
     }
     
-    
-    @objc
-    func handleTap(_ gestureRecognize: UIGestureRecognizer) {
-        // retrieve the SCNView
+    @IBAction func handleButton(_ sender: UIButton) {
+        // Get current animation and next animation.
+        let currAnimation = heroAnimations.currentElement
+        let nextAnimation = heroAnimations.cycle()
+        
+        // Stop current animation.
+        heroNode.animationPlayer(forKey: currAnimation!.name)!.stop(withBlendOutDuration: 1.0)
 
+        // Play next animation.
+        heroNode.animationPlayer(forKey: nextAnimation!.name)!.play()
 
-//        loadAnimation(withKey: "dribble", sceneName: "art.scnassets/Dribble", animationIdentifier: "Dribble-1")
-//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
-//        characterNode!.addAnimation(animations["dribble"]!, forKey: "dribble")
-        
-        
-//        zombieAnimation.blendFactor = 0.5
-//        zombieAnimation.stop(withBlendOutDuration: 1.0)
-        
-//        let characterNode = scnView.scene?.rootNode.childNode(withName: "IdleFixed", recursively: true)!
-//        self.dribbleAnimation = SCNAnimationPlayer.loadAnimation(fromSceneNamed: "art.scnassets/Dribble.dae")
-//        
-//        self.dribbleAnimation.animation.blendInDuration = 0.25
-//        self.dribbleAnimation.animation.blendOutDuration = 0.5
-//
-//        characterNode!.addAnimationPlayer(self.dribbleAnimation, forKey: "dribble")
-//        self.dribbleAnimation.animation.repeatCount = 2
-//        self.dribbleAnimation.play()
+        // Update button title with current animation name.
+        updateButtonTitle()
     }
+    
+    func updateButtonTitle() {
+        animationButton.setTitle(heroAnimations.currentElement?.name, for: .normal)
+    }
+
     
     override var shouldAutorotate: Bool {
         return true
@@ -146,15 +117,6 @@ class ViewController: UIViewController {
             return .all
         }
     }
-
-
-    @IBAction func handleButton(_ sender: UIButton) {
-        print("hello")
-    
-    }
-    
-
-
 }
 
 

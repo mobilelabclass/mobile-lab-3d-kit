@@ -23,7 +23,7 @@
                             </sceneKitView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qbi-7M-w9d">
                                 <rect key="frame" x="20" y="617" width="200" height="30"/>
-                                <color key="backgroundColor" red="0.87843137250000003" green="0.2274509804" blue="0.24313725489999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" red="0.3803921569" green="0.73333333329999995" blue="0.27450980390000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="200" id="Lag-yB-zPr"/>
                                 </constraints>
@@ -48,6 +48,7 @@
                         <viewLayoutGuide key="safeArea" id="yIA-1s-3r6"/>
                     </view>
                     <connections>
+                        <outlet property="animationButton" destination="qbi-7M-w9d" id="tfW-cG-jr9"/>
                         <outlet property="sceneView" destination="46F-Jc-Xdv" id="i7e-sx-xx5"/>
                     </connections>
                 </viewController>
